@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="my diary/my diary.vcxproj" />
+  <Project Path="my diary/my diary.vcxproj" Id="4c08e626-cff5-47e4-9bb4-977e456f45c3" />
 </Solution>
