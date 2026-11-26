@@ -13,10 +13,12 @@ struct Day {
 	int hoursSlept = 0;
 	bool dreamt = false;
 	string dream = "";
+	int mood;
 	//other for other functions
 };
 
 vector <Day> days(366);
+//maybe vector for years that include Day vectors
 
 int inputControl(int min, int max) {
 	int input;
@@ -54,11 +56,12 @@ int currentDay() {
 	return position;
 }
 
-void diary() {
+void diary(int position) {
 	
 }
 //To do
 void sleep(int position) {
+	system("cls");
 	if (days[position].hoursSlept != 0) {
 		cout << "You already registered your sleep for today" << endl;
 		cout << "Do you want to modify it?(1.yes 2.no)" << endl;
@@ -103,6 +106,8 @@ void sleep(int position) {
 			return;
 		}
 		else if (update == 2) {
+			cout << "Sleep unchanged. Press Enter to return to menu" << endl;
+			cin.get();
 			system("cls");
 			return;
 		}
@@ -118,6 +123,108 @@ void sleep(int position) {
 		getline(cin , days[position].dream);
 	}
 	cout << "Sleep tracker updated" << endl;
+	cin.get();
+	system("cls");
+	return;
+}
+
+void mood(int position) {
+	system("cls");
+	if (days[position].mood != 0) {
+		cout << "You already registered your mood for today" << endl;
+		cout << "Do you want to modify it?(1.yes 2.no)" << endl;
+		int update = inputControl(1, 2);
+		if (update == 1) {
+			cout << "What was tour mood today" << endl;
+			cout << "1. euphoric" << endl;
+			cout << "2. happy" << endl;
+			cout << "3. good" << endl;
+			cout << "4. meh" << endl;
+			cout << "5. down" << endl;
+			cout << "previously ";
+			switch (days[position].mood) {
+			case 1: 
+				cout << "euphoric" << endl;
+				break;
+			case 2:
+				cout << "happy" << endl;
+				break;
+			case 3:
+				cout << "good" << endl;
+				break;
+			case 4:
+				cout << "meh" << endl;
+				break;
+			case 5:
+				cout << "down" << endl;
+				break;
+			}
+			int mood = inputControl(1, 5);
+			switch (mood) {
+			case 1: {
+				days[position].mood = 1;
+				break;
+			}
+			case 2: {
+				days[position].mood = 2;
+				break;
+			}
+			case 3: {
+				days[position].mood = 3;
+				break;
+			}
+			case 4: {
+				days[position].mood = 4;
+				break;
+			}
+			case 5: {
+				days[position].mood = 5;
+				break;
+			}
+			}
+			cout << "mood tracker updated" << endl;
+			cin.get();
+			system("cls");
+			return;
+		}
+		else if (update == 2) {
+			cout << "Mood unchanged. Press Enter to return to menu" << endl;
+			cin.get();
+			system("cls");
+			return;
+		}
+
+	}
+	cout << "What was your mood today?" << endl;
+	cout << "1. euphoric" << endl;
+	cout << "2. happy" << endl;
+	cout << "3. good" << endl;
+	cout << "4. meh" << endl;
+	cout << "5. down" << endl;
+	int mood = inputControl(1, 5);
+	switch (mood) {
+	case 1: {
+		days[position].mood = 1;
+		break;
+	}
+	case 2: {
+		days[position].mood = 2;
+		break;
+	}
+	case 3: {
+		days[position].mood = 3;
+		break;
+	}
+	case 4: {
+		days[position].mood = 4;
+		break;
+	}
+	case 5: {
+		days[position].mood = 5;
+		break;
+	}
+	}
+	cout << "Mood tracker updated" << endl;
 	cin.get();
 	system("cls");
 	return;
@@ -150,7 +257,7 @@ int main() {
 			break;
 		}
 		case 3: {
-			//mood
+			mood(position);
 			break;
 		}
 		case 4: {
