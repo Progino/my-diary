@@ -13,7 +13,10 @@ struct Day {
 	int hoursSlept = 0;
 	bool dreamt = false;
 	string dream = "";
-	int mood;
+	int mood = 0;
+	string sport = "";
+	int sportHours = 0;
+	int fatigue;
 	//other for other functions
 };
 
@@ -56,12 +59,68 @@ int currentDay() {
 	return position;
 }
 
-void diary(int position) {
-	
-}
-//To do
-void sleep(int position) {
+void sport(int position) {
+	if (days[position].sport != "") {
+		cout << "You already registered sport for today" << endl;
+		cout << "Do you want to modify it?(1.yes 2.no)" << endl;
+		int sport = inputControl(1, 2);
+		if (sport == 1) {
+			cout << "What sport did you prectice today?" << endl;
+			cout << "previously " << days[position].sport << endl;
+			cout << "Do you want to change it?(1.yes 2.no)" << endl;
+			int change = inputControl(1, 2);
+			if (change == 1) {
+				cout << "insert the new sport for today" << endl;
+				getline(cin, days[position].sport);
+			}
+			cout << "For how many hours did you practice " << days[position].sport << "?" << endl;
+			cout << "Previously " << days[position].sportHours << " hours" << endl;
+			days[position].sportHours = inputControl(0, 24);
+			cout << "And how do you feel?" << endl;
+			cout << "1. Energized" << endl;
+			cout << "2. Tired (good fatigue)" << endl;
+			cout << "3. Exhausted" << endl;
+			cout << "Previously ";
+			switch (days[position].fatigue) {
+			case 1:
+				cout << "Energized" << endl;
+				break;
+			case 2:
+				cout << "Tired (good fatigue)" << endl;
+				break;
+			case 3:
+				cout << "Exhausted" << endl;
+				break;
+			}
+			days[position].fatigue = inputControl(1, 3);
+			cout << "Sport tracker updated" << endl;
+			cin.get();
+			system("cls");
+			return;
+		}
+		else if (sport == 2) {
+			cout << "Sport unchanged. Press Enter to return to menu" << endl;
+			cin.get();
+			system("cls");
+			return;
+		}
+	}
+	cout << "what sport did tou practice today?" << endl;
+	getline(cin, days[position].sport);
+	cout << "For how many hours did you practice " << days[position].sport <<"?" << endl;
+	days[position].sportHours = inputControl(0, 24);
+	cout << "And how do you feel" << endl;
+	cout << "1. Energized" << endl;
+	cout << "2. Tired (good fatigue)" << endl;
+	cout << "3. Exhausted" << endl;
+	days[position].fatigue = inputControl(1, 3);
+	cout << "Sport tracker updated" << endl;
+	cin.get();
 	system("cls");
+	return;
+}
+
+void sleep(int position) {
 	if (days[position].hoursSlept != 0) {
 		cout << "You already registered your sleep for today" << endl;
 		cout << "Do you want to modify it?(1.yes 2.no)" << endl;
@@ -88,6 +147,7 @@ void sleep(int position) {
 					cout << "do you want to change it?(1.yes 2.no)" << endl;
 					int newDream = inputControl(1, 2);
 					if (newDream == 1) {
+						cout << "Insert the new dream" << endl;
 						getline(cin, days[position].dream);
 					}
 				}
@@ -129,7 +189,6 @@ void sleep(int position) {
 }
 
 void mood(int position) {
-	system("cls");
 	if (days[position].mood != 0) {
 		cout << "You already registered your mood for today" << endl;
 		cout << "Do you want to modify it?(1.yes 2.no)" << endl;
@@ -159,29 +218,7 @@ void mood(int position) {
 				cout << "down" << endl;
 				break;
 			}
-			int mood = inputControl(1, 5);
-			switch (mood) {
-			case 1: {
-				days[position].mood = 1;
-				break;
-			}
-			case 2: {
-				days[position].mood = 2;
-				break;
-			}
-			case 3: {
-				days[position].mood = 3;
-				break;
-			}
-			case 4: {
-				days[position].mood = 4;
-				break;
-			}
-			case 5: {
-				days[position].mood = 5;
-				break;
-			}
-			}
+			days[position].mood = inputControl(1, 5);
 			cout << "mood tracker updated" << endl;
 			cin.get();
 			system("cls");
@@ -201,29 +238,7 @@ void mood(int position) {
 	cout << "3. good" << endl;
 	cout << "4. meh" << endl;
 	cout << "5. down" << endl;
-	int mood = inputControl(1, 5);
-	switch (mood) {
-	case 1: {
-		days[position].mood = 1;
-		break;
-	}
-	case 2: {
-		days[position].mood = 2;
-		break;
-	}
-	case 3: {
-		days[position].mood = 3;
-		break;
-	}
-	case 4: {
-		days[position].mood = 4;
-		break;
-	}
-	case 5: {
-		days[position].mood = 5;
-		break;
-	}
-	}
+	days[position].mood = inputControl(1, 5);
 	cout << "Mood tracker updated" << endl;
 	cin.get();
 	system("cls");
@@ -232,13 +247,14 @@ void mood(int position) {
 
 int menu() {
 	int choice;
-	cout << "1. Diary" << endl;
+	cout << "1. sport" << endl;
 	cout << "2. Sleep" << endl;
 	cout << "3. mood" << endl;
-	cout << "4. objective" << endl;
-	cout << "5. recap" << endl;
-	cout << "6. exit" << endl;
-	choice = inputControl(1, 6);
+	cout << "4. study" << endl;
+	cout << "5. objective" << endl;
+	cout << "6. recap" << endl;
+	cout << "7. exit" << endl;
+	choice = inputControl(1, 7);
 	return choice;
 }
 
@@ -249,26 +265,36 @@ int main() {
 		int choice = menu();
 		switch (choice) {
 		case 1: {
-			//diary
+			system("cls");
+			sport(position);
 			break;
 		}
 		case 2: {
+			system("cls");
 			sleep(position);
 			break;
 		}
 		case 3: {
+			system("cls");
 			mood(position);
 			break;
 		}
 		case 4: {
-			//objective
+			system("cls");
+			//study(position);
 			break;
 		}
 		case 5: {
-			//recap
+			system("cls");
+			//objective
 			break;
 		}
 		case 6: {
+			system("cls");
+			//recap
+			break;
+		}
+		case 7: {
 			return 0;
 		}
 		}
