@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
 struct Day {
@@ -18,11 +20,51 @@ struct Day {
 	int mood = 0;
 	string subject = "";
 	int studyHours = 0;
-	//other for other functions
 };
 
 vector <Day> days(365);
 //maybe vector for years that include Day vectors
+
+const string SPORT = "sport.txt";
+
+void loadSportFromFile() {
+	ifstream file(SPORT);
+	if (!file.is_open()) {
+		cout << "Unable to open the file" << endl;
+		return;
+	}
+
+	string line;
+	while (getline(file, line)) {
+		stringstream ss(line);
+		string dayS, sport, hoursS, fatigueS;
+		if (getline(ss, dayS, ';') && getline(ss, sport, ';') && getline(ss, hoursS, ';') && getline(ss, fatigueS, ';')) {
+
+			int d = stoi(dayS);
+			if (d >= 0 && d < 365) {
+				days[d].sport = sport;
+				days[d].sportHours = stoi(hoursS);
+				days[d].fatigue = stoi(fatigueS);
+			}
+		}
+	}
+	file.close();
+}
+
+void saveSportFromFile() {
+	ofstream file(SPORT,ios::app);
+	if (!file.is_open()) {
+		cout << "Unable to save the data" << endl;
+		return;
+	}
+	for (int i = 0;i < 365;i++) {
+		if (days[i].sport != "") {
+			file << i << ";" << days[i].sport << ";" << days[i].sportHours << ";" << days[i].fatigue << endl;
+
+		}
+	}
+	file.close();
+}
 
 int inputControl(int min, int max) {
 	int input;
@@ -60,6 +102,7 @@ int currentDay() {
 	return position;
 }
 
+//find a way to update the file and change it so delete and replace
 void sport(int position) {
 	if (days[position].sport != "") {
 		cout << "You already registered sport for today" << endl;
@@ -94,6 +137,7 @@ void sport(int position) {
 				break;
 			}
 			days[position].fatigue = inputControl(1, 3);
+			saveSportFromFile();
 			cout << "Sport tracker updated" << endl;
 			cin.get();
 			system("cls");
@@ -115,6 +159,7 @@ void sport(int position) {
 	cout << "2. Tired (good fatigue)" << endl;
 	cout << "3. Exhausted" << endl;
 	days[position].fatigue = inputControl(1, 3);
+	saveSportFromFile();
 	cout << "Sport tracker updated" << endl;
 	cin.get();
 	system("cls");
@@ -457,6 +502,7 @@ int menu() {
 }
 
 int main() {
+	loadSportFromFile();
 	int position = currentDay();
 
 	while (true) {
