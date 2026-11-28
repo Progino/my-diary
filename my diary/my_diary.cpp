@@ -26,6 +26,9 @@ vector <Day> days(365);
 //maybe vector for years that include Day vectors
 
 const string SPORT = "sport.txt";
+const string SLEEP = "sleep.txt";
+const string MOOD =  "mood.txt";
+const string STUDY = "study.txt";
 
 void loadSportFromFile() {
 	ifstream file(SPORT);
@@ -52,15 +55,126 @@ void loadSportFromFile() {
 }
 
 void saveSportFromFile() {
-	ofstream file(SPORT,ios::app);
+	ofstream file(SPORT);
 	if (!file.is_open()) {
 		cout << "Unable to save the data" << endl;
 		return;
 	}
 	for (int i = 0;i < 365;i++) {
 		if (days[i].sport != "") {
-			file << i << ";" << days[i].sport << ";" << days[i].sportHours << ";" << days[i].fatigue << endl;
+			file << i << ";" << days[i].sport << ";" << days[i].sportHours << ";" << days[i].fatigue << ";"<<endl;
 
+		}
+	}
+	file.close();
+}
+
+void loadSleepFromFile() {
+	ifstream file(SLEEP);
+	if (!file.is_open()) {
+		cout << "Unable to open the file" << endl;
+		return;
+	}
+
+	string line;
+	while (getline(file, line)) {
+		stringstream ss(line);
+		string dayS, hoursSlept, dreamt, dream;
+		if (getline(ss, dayS, ';') && getline(ss, hoursSlept, ';') && getline(ss, dreamt, ';') && getline(ss, dream, ';')) {
+
+			int d = stoi(dayS);
+			if (d >= 0 && d < 365) {
+				days[d].hoursSlept = stoi(hoursSlept);
+				days[d].dreamt = stoi(dreamt);
+				days[d].dream = dream;
+			}
+		}
+	}
+	file.close();
+}
+
+void saveSleepFromFile() {
+	ofstream file(SLEEP);
+	if (!file.is_open()) {
+		cout << "Unable to save the data" << endl;
+		return;
+	}
+	for (int i = 0;i < 365;i++) {
+		if (days[i].hoursSlept != 0) {
+			file << i << ";" << days[i].hoursSlept << ";" << days[i].dreamt << ";" << days[i].dream << ";"<< endl;
+		}
+	}
+	file.close();
+}
+
+void loadMoodFromFile() {
+	ifstream file(MOOD);
+	if (!file.is_open()) {
+		cout << "Unable to open the file" << endl;
+		return;
+	}
+
+	string line;
+	while (getline(file, line)) {
+		stringstream ss(line);
+		string dayS, mood;
+		if (getline(ss, dayS, ';') && getline(ss, mood, ';')) {
+
+			int d = stoi(dayS);
+			if (d >= 0 && d < 365) {
+				days[d].mood = stoi(mood);
+			}
+		}
+	}
+	file.close();
+}//mood
+
+void saveMoodFromFile() {
+	ofstream file(MOOD);
+	if (!file.is_open()) {
+		cout << "Unable to save the data" << endl;
+		return;
+	}
+	for (int i = 0;i < 365;i++) {
+		if (days[i].mood != 0) {
+			file << i << ";" << days[i].mood << ";"<< endl;
+		}
+	}
+	file.close();
+}
+
+void loadStudyFromFile() {
+	ifstream file(STUDY);
+	if (!file.is_open()) {
+		cout << "Unable to open the file" << endl;
+		return;
+	}
+
+	string line;
+	while (getline(file, line)) {
+		stringstream ss(line);
+		string dayS, subject, studyHours;
+		if (getline(ss, dayS, ';') && getline(ss, subject, ';') && getline(ss, studyHours, ';')) {
+
+			int d = stoi(dayS);
+			if (d >= 0 && d < 365) {
+				days[d].subject = subject;
+				days[d].studyHours = stoi(studyHours);
+			}
+		}
+	}
+	file.close();
+}
+
+void saveStudyFromFile() {
+	ofstream file(STUDY);
+	if (!file.is_open()) {
+		cout << "Unable to save the data" << endl;
+		return;
+	}
+	for (int i = 0;i < 365;i++) {
+		if (days[i].subject != "") {
+			file << i << ";" << days[i].subject << ";" << days[i].studyHours << ";"<< endl;
 		}
 	}
 	file.close();
@@ -206,6 +320,7 @@ void sleep(int position) {
 				days[position].dreamt = false;
 				days[position].dream = "";
 			}
+			saveSleepFromFile();
 			cout << "Sleep tracker updated" << endl;
 			cin.get();
 			system("cls");
@@ -228,6 +343,7 @@ void sleep(int position) {
 		cout << "Briefly describe your dream:" << endl;
 		getline(cin, days[position].dream);
 	}
+	saveSleepFromFile();
 	cout << "Sleep tracker updated" << endl;
 	cin.get();
 	system("cls");
@@ -265,6 +381,7 @@ void mood(int position) {
 				break;
 			}
 			days[position].mood = inputControl(1, 5);
+			saveMoodFromFile();
 			cout << "mood tracker updated" << endl;
 			cin.get();
 			system("cls");
@@ -285,6 +402,7 @@ void mood(int position) {
 	cout << "4. meh" << endl;
 	cout << "5. down" << endl;
 	days[position].mood = inputControl(1, 5);
+	saveMoodFromFile();
 	cout << "Mood tracker updated" << endl;
 	cin.get();
 	system("cls");
@@ -307,6 +425,7 @@ void study(int position) {
 			}
 			cout << "How many hours did you study today?" << endl;
 			days[position].studyHours = inputControl(0, 24);
+			saveStudyFromFile();
 			cout << "Study tracker updated" << endl;
 			cin.get();
 			system("cls");
@@ -323,6 +442,7 @@ void study(int position) {
 	getline(cin, days[position].subject);
 	cout << "How many hours did you study it?" << endl;
 	days[position].studyHours = inputControl(0, 24);
+	saveStudyFromFile();
 	cout << "Study tracker updated" << endl;
 	cin.get();
 	system("cls");
@@ -439,11 +559,6 @@ void recap() {
 			}
 			cout << "mood: ";
 			switch (days[day].mood) {
-				cout << "1. euphoric" << endl;
-				cout << "2. happy" << endl;
-				cout << "3. good" << endl;
-				cout << "4. meh" << endl;
-				cout << "5. down" << endl;
 			case 1:
 				cout << "euphoric" << endl;
 				break;
@@ -503,6 +618,9 @@ int menu() {
 
 int main() {
 	loadSportFromFile();
+	loadSleepFromFile();
+	loadMoodFromFile();
+	loadStudyFromFile();
 	int position = currentDay();
 
 	while (true) {
