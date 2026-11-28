@@ -22,7 +22,13 @@ struct Day {
 	int studyHours = 0;
 };
 
+struct Goal {
+	bool done = false;
+	string goal = "";
+};
+
 vector <Day> days(365);
+vector <Goal> goals;
 //maybe vector for years that include Day vectors
 
 const string SPORT = "sport.txt";
@@ -216,7 +222,6 @@ int currentDay() {
 	return position;
 }
 
-//find a way to update the file and change it so delete and replace
 void sport(int position) {
 	if (days[position].sport != "") {
 		cout << "You already registered sport for today" << endl;
@@ -485,6 +490,72 @@ string getDate(int finalDay) {
 
 	return to_string(day) + "/" + to_string(month);
 }
+//make that you can continue to choose an option as many time you want
+//add saving files
+void objective() {
+	while (true) {
+		cout << "1. add goal" << endl;
+		cout << "2. see goals" << endl;
+		cout << "3. check off goal" << endl;
+		cout << "4. exit" << endl;
+		int goal = inputControl(1, 4);
+		switch (goal) {
+		case 1: {
+			Goal newGoal;
+			cout << "What's your goal:" << endl;
+			getline(cin, newGoal.goal);
+			goals.push_back(newGoal);
+			cout << endl << "Goal added succesfully" << endl;
+			cout << "(Press enter)" << endl;
+			cin.get();
+			system("cls");
+			break;
+		}
+		case 2: {
+			cout << "GOALS" << endl << endl;
+			if (goals.empty()) {
+				cout << "Add a goal first" << endl;
+				cout <<endl<< "(Press enter)" << endl;
+				cin.get();
+				system("cls");
+				break;
+			}
+			for (size_t i = 0;i < goals.size();i++) {
+				cout << "[] " << goals[i].goal << endl;
+			}
+			cout <<endl<< "(Press enter)" << endl;
+			cin.get();
+			system("cls");
+			break;
+		}
+		case 3: {
+			if (goals.empty()) {
+				cout << "Add a goal first" << endl;
+				cout << endl <<  "(Press enter)" << endl;
+				cin.get();
+				system("cls");
+				break;
+			}
+			cout << "What goal did you complete?" << endl;
+			for (size_t i = 0;i < goals.size();i++) {
+				cout << i + 1 << "[]" << goals[i].goal << endl;;
+			}
+			int check = inputControl(1, goals.size());
+
+			goals.erase(goals.begin() + check - 1);
+			cout << "Goal comleted succesfully" << endl;
+			cout << "(Press enter)" << endl;
+			cin.get();
+			system("cls");
+			break;
+		}
+		case 4: {
+			return;
+		}
+		}
+	}
+
+}
 
 void recap() {
 	cout << "What date do you want to see?" << endl<<endl;
@@ -617,6 +688,7 @@ int menu() {
 }
 
 int main() {
+	int goals = 0;
 	loadSportFromFile();
 	loadSleepFromFile();
 	loadMoodFromFile();
@@ -648,7 +720,7 @@ int main() {
 		}
 		case 5: {
 			system("cls");
-			//objective
+			objective();
 			break;
 		}
 		case 6: {
